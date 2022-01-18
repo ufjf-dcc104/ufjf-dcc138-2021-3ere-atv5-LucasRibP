@@ -8,6 +8,8 @@ export default class Cena {
 
     this.t0 = 0;
     this.dt = 0;
+
+    this.idAnim = null;
   }
 
   desenhar() {
@@ -34,5 +36,16 @@ export default class Cena {
     this.desenhar();
 
     this.t0 = t;
+    this.iniciar();
+  }
+
+  iniciar() {
+    this.idAnim = requestAnimationFrame((t) => this.quadro(t));
+  }
+
+  parar() {
+    cancelAnimationFrame(this.idAnim);
+    this.t0 = null;
+    this.dt = 0;
   }
 }
