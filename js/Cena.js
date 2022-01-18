@@ -36,6 +36,7 @@ export default class Cena {
     this.passo(this.dt);
     this.desenhar();
     this.checaColisao();
+    this.removeSprites();
 
     this.t0 = t;
     this.iniciar();
@@ -67,5 +68,12 @@ export default class Cena {
     this.aRemover.add(a);
     this.aRemover.add(b);
     console.log(this.aRemover);
+  }
+
+  removeSprites() {
+    if (this.aRemover.size > 0) {
+      this.sprites = this.sprites.filter((item) => !this.aRemover.has(item));
+      this.aRemover.clear();
+    }
   }
 }
