@@ -10,6 +10,7 @@ export default class Cena {
     this.dt = 0;
 
     this.idAnim = null;
+    this.aRemover = new Set();
   }
 
   desenhar() {
@@ -56,9 +57,15 @@ export default class Cena {
       for (let b = a + 1; b < this.sprites.length; b++) {
         const spriteB = this.sprites[b];
         if (spriteA.colidiuCom(spriteB)) {
-          console.log(spriteA, spriteB);
+          this.quandoColidir(spriteA, spriteB);
         }
       }
     }
+  }
+
+  quandoColidir(a, b) {
+    this.aRemover.add(a);
+    this.aRemover.add(b);
+    console.log(this.aRemover);
   }
 }
