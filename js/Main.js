@@ -1,11 +1,15 @@
 import AssetManager from "./AssetManager.js";
 import Cena from "./Cena.js";
+import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
 
 const assets = new AssetManager();
 const canvas = document.querySelector("canvas");
 
 const cena1 = new Cena(canvas, assets);
+const mapa1 = new Mapa();
+cena1.configuraMapa(mapa1);
+
 const pc = new Sprite();
 const en1 = new Sprite({ x: 140, w: 30, vx: -10, color: "red" });
 
