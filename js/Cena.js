@@ -17,11 +17,14 @@ export default class Cena {
   desenhar() {
     this.ctx.fillStyle = "grey";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.sprites.forEach((sprite) => {
-      sprite.desenhar(this.ctx);
-    });
-    this.ctx.fillStyle = "yellow";
-    this.ctx.fillText(this.assets?.progresso(), 10, 20);
+    if (this.assets.acabou()) {
+      this.sprites.forEach((sprite) => {
+        sprite.desenhar(this.ctx);
+      });
+    } else {
+      this.ctx.fillStyle = "yellow";
+      this.ctx.fillText(this.assets?.progresso(), 10, 20);
+    }
   }
 
   adicionar(sprite) {
@@ -29,6 +32,8 @@ export default class Cena {
   }
 
   passo(dt) {
+    if (!this.passo.acabou()) return;
+
     this.sprites.forEach((sprite) => sprite.passo(dt));
   }
 
