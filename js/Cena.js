@@ -32,7 +32,7 @@ export default class Cena {
   }
 
   passo(dt) {
-    if (!this.passo.acabou()) return;
+    if (!this.assets.acabou()) return;
 
     this.sprites.forEach((sprite) => sprite.passo(dt));
   }
