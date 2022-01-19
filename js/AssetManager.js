@@ -13,7 +13,7 @@ export default class AssetManager {
     });
 
     img1.src = source;
-    this.imagens.set(chage, img1);
+    this.imagens.set(chave, img1);
     this.aCarregar++;
   }
 
