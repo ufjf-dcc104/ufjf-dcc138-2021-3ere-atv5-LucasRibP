@@ -24,6 +24,7 @@ export default class Cena {
     if (this.assets.acabou()) {
       this.sprites.forEach((sprite) => {
         sprite.desenhar(this.ctx);
+        sprite.aplicaRestricoes();
       });
     } else {
       this.ctx.fillStyle = "yellow";
