@@ -2,6 +2,7 @@ import AssetManager from "./AssetManager.js";
 import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
+import modeloMapa from "../maps/mapa1.js";
 
 const assets = new AssetManager();
 const canvas = document.querySelector("canvas");
@@ -20,6 +21,7 @@ const mapa1 = new Mapa(
   configMapa.colunas,
   configMapa.tamanho
 );
+mapa1.carregaMapa(modeloMapa);
 cena1.configuraMapa(mapa1);
 
 const pc = new Sprite();

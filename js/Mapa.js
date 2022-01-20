@@ -35,4 +35,15 @@ export default class Mapa {
       }
     }
   }
+  carregaMapa(modelo) {
+    this.tiles = [];
+    this.LINHAS = modelo.length;
+    this.COLUNAS = modelo[0]?.length ?? 0;
+    for (let l = 0; l < this.LINHAS; l++) {
+      this.tiles[l] = [];
+      for (let c = 0; c < this.COLUNAS; c++) {
+        this.tiles[l][c] = modelo[l][c];
+      }
+    }
+  }
 }
