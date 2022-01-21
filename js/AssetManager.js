@@ -34,7 +34,7 @@ export default class AssetManager {
     return this.imagens.get(chave);
   }
 
-  img(chave) {
+  audio(chave) {
     return this.audios.get(chave);
   }
 
