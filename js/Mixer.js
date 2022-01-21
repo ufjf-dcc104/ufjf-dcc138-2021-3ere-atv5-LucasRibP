@@ -17,13 +17,9 @@ export default class Mixer {
 
   play(audio) {
     const agora = new Date().getTime();
-    this.canais.forEach((canal) => {
-      if (canal.fim < agora) {
-        canal.audio.src = audio.src;
-        canal.audio.play();
-        canal.fim = agora.getTime() + audio.duration * 1000;
-        break;
-      }
-    });
+    canal = this.canais.find((canal) => canal.fim < agora);
+    canal.audio.src = audio.src;
+    canal.audio.play();
+    canal.fim = agora.getTime() + audio.duration * 1000;
   }
 }
