@@ -4,9 +4,9 @@ import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
 import modeloMapa from "../maps/mapa1.js";
 
-const assets = new AssetManager();
-
 const mixer = new Mixer(10);
+const assets = new AssetManager(mixer);
+
 const canvas = document.querySelector("canvas");
 const configMapa = {
   linhas: 10,
