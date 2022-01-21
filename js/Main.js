@@ -3,7 +3,10 @@ import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
 import modeloMapa from "../maps/mapa1.js";
+import Mixer from "./Mixer.js";
+import InputManager from "./InputManager.js";
 
+const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
 
@@ -16,6 +19,13 @@ const configMapa = {
 
 canvas.width = configMapa.colunas * configMapa.tamanho;
 canvas.height = configMapa.linhas * configMapa.tamanho;
+
+input.configurarTeclado({
+  ArrowLeft: "MOVE_ESQUERDA",
+  ArrowRight: "MOVE_DIREITA",
+  ArrowUp: "MOVE_CIMA",
+  ArrowDown: "MOVE_BAIXO",
+});
 
 const cena1 = new Cena(canvas, assets);
 const mapa1 = new Mapa(
