@@ -10,8 +10,6 @@ export default class Mapa {
         this.tiles[l][c] = 0;
       }
     }
-
-    this.cena = null;
   }
 
   desenhar(ctx) {

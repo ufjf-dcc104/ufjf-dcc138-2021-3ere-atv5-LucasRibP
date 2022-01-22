@@ -31,14 +31,19 @@ const cena1 = new Cena(canvas, assets);
 const mapa1 = new Mapa(
   configMapa.linhas,
   configMapa.colunas,
-  configMapa.tamanho
+  configMapa.tamanho,
+  cena1
 );
 mapa1.carregaMapa(modeloMapa);
 cena1.configuraMapa(mapa1);
 
 const randPos = mapa1.geraPosicaoValidaAleatoria();
 
-const pc = new Sprite(randPos);
+const pc = new Sprite({
+  x: (configMapa.colunas * configMapa.tamanho) / 2,
+  y: (configMapa.linhas * configMapa.tamanho) / 2,
+});
+
 pc.controlar = function (dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
     this.vx = -50;
@@ -63,14 +68,20 @@ function perseguePC(dt) {
   this.vy = 25 * Math.sign(pc.y - this.y);
 }
 
-const en1 = new Sprite({ x: 300, color: "red", controlar: perseguePC });
-cena1.adicionar(en1);
-cena1.adicionar(
-  new Sprite({ x: 115, y: 70, vy: 10, color: "red", controlar: perseguePC })
-);
-cena1.adicionar(
-  new Sprite({ x: 115, y: 160, vy: -10, color: "red", controlar: perseguePC })
-);
+function geraInimigo(cena) {
+  cena.adicionar(
+    new Sprite({
+      ...cena.mapa.geraPosicaoValidaAleatoria(),
+      color: "red",
+      controlar: perseguePC,
+    })
+  );
+}
+
+for (let i = 0; i < 3; i++) {
+  geraInimigo(cena1);
+}
+
 cena1.iniciar();
 
 document.addEventListener("keydown", (e) => {
