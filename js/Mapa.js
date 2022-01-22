@@ -51,6 +51,10 @@ export default class Mapa {
     }
   }
 
+  obterPosicaoNoCanvas(linha, coluna) {
+    return { x: (coluna + 0.5) * this.SIZE, y: (linha + 0.5) * this.SIZE };
+  }
+
   geraPosicaoValidaAleatoria(invalidList = [1]) {
     if (this.tiles.length == 0) return;
 
@@ -61,9 +65,11 @@ export default class Mapa {
       randLine = Math.floor(Math.random() * this.LINHAS);
       randCol = Math.floor(Math.random() * this.LINHAS);
     }
-    const randX = (randCol + 0.5) * this.SIZE;
-    const randY = (randLine + 0.5) * this.SIZE;
 
-    return { x: randX, y: randY, line: randLine, col: randCol };
+    return {
+      ...this.obterPosicaoNoCanvas(randLine, randCol),
+      line: randLine,
+      col: randCol,
+    };
   }
 }
