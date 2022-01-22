@@ -95,7 +95,6 @@ export default class Cena {
   tocaSomDeMorte() {
     let maiorPrioridade = -Infinity;
     let somATocar = null;
-    console.log("AAAAAAAAAAAA");
     this.aRemover.forEach((sprite) => {
       if (sprite.soundPriority > maiorPrioridade) {
         maiorPrioridade = sprite.soundPriority;
