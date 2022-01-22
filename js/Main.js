@@ -13,6 +13,9 @@ const assets = new AssetManager(mixer);
 assets.carregaImagem("parede", "assets/crystal_wall04.png");
 assets.carregaImagem("chao", "assets/marble_floor4.png");
 
+assets.carregaAudio("boom", "assets/boom.wav");
+assets.carregaAudio("lose", "assets/lose.wav");
+
 const canvas = document.querySelector("canvas");
 const configMapa = {
   linhas: modeloMapa.length,
@@ -42,15 +45,15 @@ const tileIdToTile = {
   0: assets.img("chao"),
   1: assets.img("parede"),
 };
+
 mapa1.carregaMapa(modeloMapa, tileIdToTile);
-
 cena1.configuraMapa(mapa1);
-
-const randPos = mapa1.geraPosicaoValidaAleatoria();
 
 const pc = new Sprite({
   x: (configMapa.colunas * configMapa.tamanho) / 2,
   y: (configMapa.linhas * configMapa.tamanho) / 2,
+  deathSound: "lose",
+  soundPriority: Infinity,
 });
 
 pc.controlar = function (dt) {
@@ -83,6 +86,8 @@ function geraInimigo(cena) {
       ...cena.mapa.geraPosicaoValidaAleatoria(),
       color: "red",
       controlar: perseguePC,
+      deathSound: "boom",
+      soundPriority: 0,
     })
   );
 }

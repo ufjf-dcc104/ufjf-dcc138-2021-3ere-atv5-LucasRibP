@@ -20,14 +20,14 @@ export default class AssetManager {
   }
 
   carregaAudio(chave, source) {
-    const audio = new Image();
+    const audio = new Audio();
+    audio.src = source;
     audio.addEventListener("loadeddata", () => {
       this.carregadas++;
       console.log(`Áudio ${this.carregadas}/${this.aCarregar}`);
     });
 
-    audio.src = source;
-    this.audios.set(chave, img1);
+    this.audios.set(chave, audio);
     this.aCarregar++;
   }
 
@@ -37,6 +37,10 @@ export default class AssetManager {
 
   audio(chave) {
     return this.audios.get(chave);
+  }
+
+  playAudioFromKey(key) {
+    this.mixer.play(this.audio(key));
   }
 
   progresso() {

@@ -11,6 +11,8 @@ export default class Sprite {
     h = 20,
     color = "white",
     controlar = () => {},
+    deathSound = null,
+    soundPriority = -Infinity,
   } = {}) {
     this.x = x;
     this.y = y;
@@ -23,6 +25,8 @@ export default class Sprite {
     this.mx = 0;
     this.my = 0;
     this.controlar = controlar;
+    this.deathSound = deathSound;
+    this.soundPriority = soundPriority;
   }
 
   desenhar(ctx) {

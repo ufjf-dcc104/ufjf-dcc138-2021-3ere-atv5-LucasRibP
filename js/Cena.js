@@ -80,14 +80,30 @@ export default class Cena {
   quandoColidir(a, b) {
     this.aRemover.add(a);
     this.aRemover.add(b);
-    console.log(this.aRemover);
   }
 
   removeSprites() {
     if (this.aRemover.size > 0) {
+      this.tocaSomDeMorte();
+
+      this.aRemover.max;
       this.sprites = this.sprites.filter((item) => !this.aRemover.has(item));
       this.aRemover = new Set();
     }
+  }
+
+  tocaSomDeMorte() {
+    let maiorPrioridade = -Infinity;
+    let somATocar = null;
+    console.log("AAAAAAAAAAAA");
+    this.aRemover.forEach((sprite) => {
+      if (sprite.soundPriority > maiorPrioridade) {
+        maiorPrioridade = sprite.soundPriority;
+        somATocar = sprite.deathSound;
+      }
+    });
+
+    if (somATocar != null) this.assets.playAudioFromKey(somATocar);
   }
 
   configuraMapa(mapa) {
