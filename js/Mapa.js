@@ -38,6 +38,7 @@ export default class Mapa {
       }
     }
   }
+
   carregaMapa(modelo) {
     this.tiles = [];
     this.LINHAS = modelo.length;
@@ -48,5 +49,21 @@ export default class Mapa {
         this.tiles[l][c] = modelo[l][c];
       }
     }
+  }
+
+  geraPosicaoValidaAleatoria(invalidList = [1]) {
+    if (this.tiles.length == 0) return;
+
+    let randLine = Math.floor(Math.random() * this.LINHAS);
+    let randCol = Math.floor(Math.random() * this.LINHAS);
+
+    while (invalidList.includes(this.tiles[randLine][randCol])) {
+      randLine = Math.floor(Math.random() * this.LINHAS);
+      randCol = Math.floor(Math.random() * this.LINHAS);
+    }
+    const randX = (randCol + 0.5) * this.SIZE;
+    const randY = (randLine + 0.5) * this.SIZE;
+
+    return { x: randX, y: randY, line: randLine, col: randCol };
   }
 }

@@ -12,8 +12,8 @@ const assets = new AssetManager(mixer);
 
 const canvas = document.querySelector("canvas");
 const configMapa = {
-  linhas: 10,
-  colunas: 14,
+  linhas: modeloMapa.length,
+  colunas: modeloMapa[0].length,
   tamanho: 32,
 };
 
@@ -36,7 +36,9 @@ const mapa1 = new Mapa(
 mapa1.carregaMapa(modeloMapa);
 cena1.configuraMapa(mapa1);
 
-const pc = new Sprite({ x: 50, y: 90, vx: 10 });
+const randPos = mapa1.geraPosicaoValidaAleatoria();
+
+const pc = new Sprite(randPos);
 pc.controlar = function (dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
     this.vx = -50;
