@@ -82,6 +82,8 @@ for (let i = 0; i < 3; i++) {
   geraInimigo(cena1);
 }
 
+const geradorDeInimigos = setInterval(() => geraInimigo(cena1), 10000);
+
 cena1.iniciar();
 
 document.addEventListener("keydown", (e) => {
