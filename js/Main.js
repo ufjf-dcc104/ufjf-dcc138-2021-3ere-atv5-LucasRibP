@@ -10,6 +10,9 @@ const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
 
+assets.carregaImagem("parede", "assets/crystal_wall04.png");
+assets.carregaImagem("chao", "assets/marble_floor4.png");
+
 const canvas = document.querySelector("canvas");
 const configMapa = {
   linhas: modeloMapa.length,
@@ -34,7 +37,13 @@ const mapa1 = new Mapa(
   configMapa.tamanho,
   cena1
 );
-mapa1.carregaMapa(modeloMapa);
+
+const tileIdToTile = {
+  0: assets.img("chao"),
+  1: assets.img("parede"),
+};
+mapa1.carregaMapa(modeloMapa, tileIdToTile);
+
 cena1.configuraMapa(mapa1);
 
 const randPos = mapa1.geraPosicaoValidaAleatoria();

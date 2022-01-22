@@ -15,29 +15,37 @@ export default class Mapa {
   desenhar(ctx) {
     for (let l = 0; l < this.LINHAS; l++) {
       for (let c = 0; c < this.COLUNAS; c++) {
+        // Pinta o chão
+        ctx.drawImage(
+          this.tileIdToImage[0],
+          c * this.SIZE,
+          l * this.SIZE,
+          this.SIZE,
+          this.SIZE
+        );
+
+        // Pinta os objetos sobre o chão
+        let imagemAPintar = null;
         switch (this.tiles[l][c]) {
           case 1:
-            ctx.fillStyle = "grey";
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "black";
+            imagemAPintar = this.tileIdToImage[1];
             break;
-          case 2:
-            ctx.fillStyle = "orange";
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "red";
-            break;
-          default:
-            ctx.fillStyle = "black";
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "grey";
         }
-        ctx.fillRect(c * this.SIZE, l * this.SIZE, this.SIZE, this.SIZE);
-        ctx.strokeRect(c * this.SIZE, l * this.SIZE, this.SIZE, this.SIZE);
+        if (imagemAPintar != null) {
+          ctx.drawImage(
+            imagemAPintar,
+            c * this.SIZE,
+            l * this.SIZE,
+            this.SIZE,
+            this.SIZE
+          );
+        }
       }
     }
   }
 
-  carregaMapa(modelo) {
+  carregaMapa(modelo, imagensDasTiles) {
+    this.tileIdToImage = imagensDasTiles;
     this.tiles = [];
     this.LINHAS = modelo.length;
     this.COLUNAS = modelo[0]?.length ?? 0;
