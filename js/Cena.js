@@ -19,9 +19,8 @@ export default class Cena {
     this.ctx.fillStyle = "lightblue";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this?.mapa.desenhar(this.ctx);
-
     if (this.assets.acabou()) {
+      this?.mapa.desenhar(this.ctx);
       this.sprites.forEach((sprite) => {
         sprite.desenhar(this.ctx);
         sprite.aplicaRestricoes();
