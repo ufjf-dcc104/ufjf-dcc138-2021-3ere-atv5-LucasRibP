@@ -65,11 +65,11 @@ export default class Mapa {
     if (this.tiles.length == 0) return;
 
     let randLine = Math.floor(Math.random() * this.LINHAS);
-    let randCol = Math.floor(Math.random() * this.LINHAS);
+    let randCol = Math.floor(Math.random() * this.COLUNAS);
 
     while (invalidList.includes(this.tiles[randLine][randCol])) {
       randLine = Math.floor(Math.random() * this.LINHAS);
-      randCol = Math.floor(Math.random() * this.LINHAS);
+      randCol = Math.floor(Math.random() * this.COLUNAS);
     }
 
     return {
