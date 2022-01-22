@@ -87,7 +87,7 @@ export default class Cena {
   removeSprites() {
     if (this.aRemover.size > 0) {
       this.sprites = this.sprites.filter((item) => !this.aRemover.has(item));
-      this.aRemover = [];
+      this.aRemover = new Set();
     }
   }
 
