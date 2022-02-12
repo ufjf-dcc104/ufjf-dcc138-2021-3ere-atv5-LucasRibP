@@ -15,31 +15,15 @@ export default class Mapa {
   desenhar(ctx) {
     for (let l = 0; l < this.LINHAS; l++) {
       for (let c = 0; c < this.COLUNAS; c++) {
-        // Pinta o chão
-        ctx.drawImage(
-          this.tileIdToImage[0],
-          c * this.SIZE,
-          l * this.SIZE,
-          this.SIZE,
-          this.SIZE
-        );
-
-        // Pinta os objetos sobre o chão
-        let imagemAPintar = null;
-        switch (this.tiles[l][c]) {
-          case 1:
-            imagemAPintar = this.tileIdToImage[1];
-            break;
-        }
-        if (imagemAPintar != null) {
+        this.tileIdToImage[this.tiles[l][c]].forEach((img) => {
           ctx.drawImage(
-            imagemAPintar,
+            img,
             c * this.SIZE,
             l * this.SIZE,
             this.SIZE,
             this.SIZE
           );
-        }
+        });
       }
     }
   }

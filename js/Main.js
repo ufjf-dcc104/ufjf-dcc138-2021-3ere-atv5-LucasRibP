@@ -10,11 +10,14 @@ const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
 
-assets.carregaImagem("parede", "assets/crystal_wall04.png");
-assets.carregaImagem("chao", "assets/marble_floor4.png");
-
-assets.carregaAudio("boom", "assets/boom.wav");
-assets.carregaAudio("lose", "assets/lose.wav");
+assets.carregaImagem("ice", "assets/ice0.png");
+assets.carregaImagem("water_btm", "assets/dngn_shallow_bord_btm.png");
+assets.carregaImagem("water_lft", "assets/dngn_shallow_bord_lft.png");
+assets.carregaImagem("water_rgt", "assets/dngn_shallow_bord_rgt.png");
+assets.carregaImagem("water_top", "assets/dngn_shallow_bord_top.png");
+assets.carregaImagem("water", "assets/dngn_shallow_water.png");
+// assets.carregaAudio("boom", "assets/boom.wav");
+// assets.carregaAudio("lose", "assets/lose.wav");
 
 const canvas = document.querySelector("canvas");
 const configMapa = {
@@ -42,8 +45,16 @@ const mapa1 = new Mapa(
 );
 
 const tileIdToTile = {
-  0: assets.img("chao"),
-  1: assets.img("parede"),
+  0: [assets.img("ice")],
+  1: [assets.img("ice"), assets.img("water_top"), assets.img("water_lft")],
+  2: [assets.img("ice"), assets.img("water_top")],
+  3: [assets.img("ice"), assets.img("water_top"), assets.img("water_rgt")],
+  4: [assets.img("ice"), assets.img("water_rgt")],
+  5: [assets.img("ice"), assets.img("water_rgt"), assets.img("water_btm")],
+  6: [assets.img("ice"), assets.img("water_btm")],
+  7: [assets.img("ice"), assets.img("water_btm"), assets.img("water_lft")],
+  8: [assets.img("ice"), assets.img("water_lft")],
+  9: [assets.img("water")],
 };
 
 mapa1.carregaMapa(modeloMapa, tileIdToTile);
@@ -52,7 +63,6 @@ cena1.configuraMapa(mapa1);
 const pc = new Sprite({
   x: (configMapa.colunas * configMapa.tamanho) / 2,
   y: (configMapa.linhas * configMapa.tamanho) / 2,
-  deathSound: "lose",
   soundPriority: Infinity,
 });
 
@@ -86,7 +96,6 @@ function geraInimigo(cena) {
       ...cena.mapa.geraPosicaoValidaAleatoria(),
       color: "red",
       controlar: perseguePC,
-      deathSound: "boom",
       soundPriority: 0,
     })
   );
