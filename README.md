@@ -26,13 +26,16 @@ Seu objetivo é sobreviver o máximo de rounds possíveis, mas cuidado, o chão 
   - Magos atirando no jogador.
   - Gelo causando as ações do jogador a derrapar
   - Água que mata o jogador caso ele caia nela.
-  
-### Dynamics
-  
-- Através do gelo e dá derrapagem gerada pelos tiros, é incentivado o uso dos tiros para auxiliar o jogador a desviar das magias. Incentivando o Desafio para o jogador.
-- A estutura de rounds vai aumentar o número de magos e consequentemente o número  de tiros, incentivando o jogador a prestar atenção em cada vez mais tiros. Incentivando o Desafio para o jogador.
 
-### Aesthetics 
+### Dynamics
+
+- Através do gelo e dá derrapagem gerada pelos tiros, é incentivado o uso dos tiros para auxiliar o jogador a desviar das magias. Incentivando o Desafio para o jogador.
+- A estutura de rounds vai aumentar o número de magos e consequentemente o número de tiros, incentivando o jogador a prestar atenção em cada vez mais tiros. Incentivando o Desafio para o jogador.
+
+### Aesthetics
 
 A estética desse jogo se basea completamente em desafio, o que é comum em jogos mais simples de "bullet hell" que é o gênero que inspirou esse jogo.
-  
+
+## Atribuíções
+
+- As tiles foram feitas por Chris Ramons no site http://opengameart.org/content/dungeon-crawl-32x32-tiles
