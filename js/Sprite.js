@@ -7,6 +7,11 @@ export default class Sprite {
     y = 100,
     vx = 0,
     vy = 0,
+    maxVx = Infinity,
+    maxVy = Infinity,
+    ax = 0,
+    ay = 0,
+    speedDecline = 0,
     w = 20,
     h = 20,
     ehBola = false,
@@ -22,6 +27,9 @@ export default class Sprite {
     this.y = y;
     this.vx = vx;
     this.vy = vy;
+    this.ax = ax;
+    this.ay = ay;
+    this.speedDecline = speedDecline;
     this.w = w;
     this.h = h;
     this.ehBola = ehBola;
@@ -60,6 +68,8 @@ export default class Sprite {
   controlar(dt) {}
 
   mover(dt) {
+    this.vx = (this.vx + this.ax * dt) * (1 - this.speedDecline) ** dt;
+    this.vy = (this.vy + this.ay * dt) * (1 - this.speedDecline) ** dt;
     this.x += this.vx * dt;
     this.y += this.vy * dt;
     this.mx = Math.floor(this.x / this.cena.mapa.SIZE);

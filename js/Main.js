@@ -66,6 +66,7 @@ const pc = new Sprite({
   y: (configMapa.linhas * configMapa.tamanho) / 2,
   soundPriority: Infinity,
   color: "#3a752a",
+  speedDecline: 0.8,
   h: 30,
   w: 30,
 });
@@ -89,23 +90,23 @@ pc.controlar = moveTanque;
 cena1.adicionar(pc);
 cena1.adicionar(cannon);
 
-const velocidadeTanque = 50;
+const aceleracaoTanque = 200;
 
 function moveTanque(dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
-    this.vx = -velocidadeTanque;
+    this.ax = -aceleracaoTanque;
   } else if (input.comandos.get("MOVE_DIREITA")) {
-    this.vx = +velocidadeTanque;
+    this.ax = +aceleracaoTanque;
   } else {
-    this.vx = 0;
+    this.ax = 0;
   }
 
   if (input.comandos.get("MOVE_CIMA")) {
-    this.vy = -velocidadeTanque;
+    this.ay = -aceleracaoTanque;
   } else if (input.comandos.get("MOVE_BAIXO")) {
-    this.vy = +velocidadeTanque;
+    this.ay = +aceleracaoTanque;
   } else {
-    this.vy = 0;
+    this.ay = 0;
   }
 }
 
