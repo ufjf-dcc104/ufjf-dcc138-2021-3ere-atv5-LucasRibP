@@ -85,8 +85,8 @@ export default class Cannon extends Sprite {
     direcao.y /= norma;
 
     const origemTiro = {
-      x: this.tank.x + direcao.x * this.h * 1.05,
-      y: this.tank.y + direcao.y * this.h * 1.05,
+      x: this.tank.x + direcao.x * this.h,
+      y: this.tank.y + direcao.y * this.h,
     };
 
     this.cena.adicionar(
@@ -94,7 +94,9 @@ export default class Cannon extends Sprite {
         ...origemTiro,
         vx: direcao.x * this.velocidadeDoTiro,
         vy: direcao.y * this.velocidadeDoTiro,
-        color: "red",
+        raio: this.w,
+        ehBola: true,
+        color: "yellow",
       })
     );
   }

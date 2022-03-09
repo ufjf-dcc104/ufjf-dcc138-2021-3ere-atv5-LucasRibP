@@ -9,6 +9,8 @@ export default class Sprite {
     vy = 0,
     w = 20,
     h = 20,
+    ehBola = false,
+    raio = 100,
     color = "white",
     controlar = () => {},
     deathSound = null,
@@ -22,6 +24,8 @@ export default class Sprite {
     this.vy = vy;
     this.w = w;
     this.h = h;
+    this.ehBola = ehBola;
+    this.raio = raio;
     this.color = color;
     this.cena = null;
     this.mx = 0;
@@ -35,7 +39,13 @@ export default class Sprite {
 
   desenhar(ctx) {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+    if (this.ehBola) {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.raio, 0, 2 * Math.PI);
+      ctx.fill();
+    } else {
+      ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+    }
     if (this.cena.isDebugging) {
       ctx.strokeStyle = "blue";
       ctx.strokeRect(
