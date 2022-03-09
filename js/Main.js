@@ -2,6 +2,7 @@ import AssetManager from "./AssetManager.js";
 import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
+import Cannon from "./Cannon.js";
 import modeloMapa from "../maps/mapa1.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
@@ -70,7 +71,7 @@ const pc = new Sprite({
 });
 
 const cannonHeight = 30;
-const cannon = new Sprite({
+const cannon = new Cannon({
   x: (configMapa.colunas * configMapa.tamanho) / 2,
   y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
   soundPriority: Infinity,
@@ -79,10 +80,11 @@ const cannon = new Sprite({
   w: 5,
   colidivel: false,
   restringivel: false,
+  canvas: canvas,
+  tank: pc,
 });
 
 pc.controlar = moveTanque;
-cannon.controlar = moveCannon;
 
 cena1.adicionar(pc);
 cena1.adicionar(cannon);
@@ -105,32 +107,6 @@ function moveTanque(dt) {
   } else {
     this.vy = 0;
   }
-}
-
-function moveCannon(dt) {
-  if (input.comandos.get("MOVE_ESQUERDA")) {
-    this.vx = -velocidadeTanque;
-  } else if (input.comandos.get("MOVE_DIREITA")) {
-    this.vx = +velocidadeTanque;
-  } else {
-    this.vx = 0;
-  }
-
-  if (input.comandos.get("MOVE_CIMA")) {
-    this.vy = -velocidadeTanque;
-  } else if (input.comandos.get("MOVE_BAIXO")) {
-    this.vy = +velocidadeTanque;
-  } else {
-    this.vy = 0;
-  }
-}
-
-function getMousePos(canvas, evt) {
-  var rect = canvas.getBoundingClientRect();
-  return {
-    x: evt.clientX - rect.left,
-    y: evt.clientY - rect.top,
-  };
 }
 
 function perseguePC(dt) {
@@ -160,11 +136,4 @@ document.addEventListener("keydown", (e) => {
       cena1.parar();
       break;
   }
-});
-canvas.addEventListener("mousemove", (e) => {
-  const rect = canvas.getBoundingClientRect();
-  console.log({
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top,
-  });
 });
