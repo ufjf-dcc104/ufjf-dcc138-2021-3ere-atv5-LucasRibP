@@ -22,6 +22,7 @@ export default class Sprite {
     soundPriority = -Infinity,
     colidivel = true,
     restringivel = true,
+    disappearsUpponScreenExit = true,
   } = {}) {
     this.x = x;
     this.y = y;
@@ -43,6 +44,7 @@ export default class Sprite {
     this.soundPriority = soundPriority;
     this.colidivel = colidivel;
     this.restringivel = restringivel;
+    this.disappearsUpponScreenExit = disappearsUpponScreenExit;
   }
 
   desenhar(ctx) {
@@ -94,18 +96,22 @@ export default class Sprite {
 
   aplicaRestricoes(dt) {
     if (this.restringivel) {
-      this.aplicaRestricoesDireita(this.mx + 1, this.my - 1);
-      this.aplicaRestricoesDireita(this.mx + 1, this.my);
-      this.aplicaRestricoesDireita(this.mx + 1, this.my + 1);
-      this.aplicaRestricoesEsquerda(this.mx - 1, this.my - 1);
-      this.aplicaRestricoesEsquerda(this.mx - 1, this.my);
-      this.aplicaRestricoesEsquerda(this.mx - 1, this.my + 1);
-      this.aplicaRestricoesBaixo(this.mx - 1, this.my + 1);
-      this.aplicaRestricoesBaixo(this.mx, this.my + 1);
-      this.aplicaRestricoesBaixo(this.mx + 1, this.my + 1);
-      this.aplicaRestricoesCima(this.mx - 1, this.my - 1);
-      this.aplicaRestricoesCima(this.mx, this.my - 1);
-      this.aplicaRestricoesCima(this.mx + 1, this.my - 1);
+      if (
+        this.aplicaRestricoesDireita(this.mx + 1, this.my - 1) ||
+        this.aplicaRestricoesDireita(this.mx + 1, this.my) ||
+        this.aplicaRestricoesDireita(this.mx + 1, this.my + 1) ||
+        this.aplicaRestricoesEsquerda(this.mx - 1, this.my - 1) ||
+        this.aplicaRestricoesEsquerda(this.mx - 1, this.my) ||
+        this.aplicaRestricoesEsquerda(this.mx - 1, this.my + 1) ||
+        this.aplicaRestricoesBaixo(this.mx - 1, this.my + 1) ||
+        this.aplicaRestricoesBaixo(this.mx, this.my + 1) ||
+        this.aplicaRestricoesBaixo(this.mx + 1, this.my + 1) ||
+        this.aplicaRestricoesCima(this.mx - 1, this.my - 1) ||
+        this.aplicaRestricoesCima(this.mx, this.my - 1) ||
+        this.aplicaRestricoesCima(this.mx + 1, this.my - 1)
+      ) {
+        this.cena.removeSprite(this);
+      }
     }
   }
 
@@ -113,10 +119,12 @@ export default class Sprite {
     const SIZE = this.cena.mapa.SIZE;
     if (this.vx > 0) {
       if (
-        this.cena.mapa.tiles[pmy] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != 0
+        this.cena.mapa.tiles[pmy] == undefined ||
+        this.cena.mapa.tiles[pmy][pmx] == undefined
       ) {
+        return true;
+      }
+      if (this.cena.mapa.tiles[pmy][pmx] != 0) {
         const tile = {
           x: pmx * SIZE + SIZE / 2,
           y: pmy * SIZE + SIZE / 2,
@@ -129,16 +137,19 @@ export default class Sprite {
         }
       }
     }
+    return false;
   }
 
   aplicaRestricoesEsquerda(pmx, pmy) {
     const SIZE = this.cena.mapa.SIZE;
     if (this.vx < 0) {
       if (
-        this.cena.mapa.tiles[pmy] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != 0
+        this.cena.mapa.tiles[pmy] == undefined ||
+        this.cena.mapa.tiles[pmy][pmx] == undefined
       ) {
+        return true;
+      }
+      if (this.cena.mapa.tiles[pmy][pmx] != 0) {
         const tile = {
           x: pmx * SIZE + SIZE / 2,
           y: pmy * SIZE + SIZE / 2,
@@ -151,16 +162,19 @@ export default class Sprite {
         }
       }
     }
+    return false;
   }
 
   aplicaRestricoesBaixo(pmx, pmy) {
     const SIZE = this.cena.mapa.SIZE;
     if (this.vy > 0) {
       if (
-        this.cena.mapa.tiles[pmy] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != 0
+        this.cena.mapa.tiles[pmy] == undefined ||
+        this.cena.mapa.tiles[pmy][pmx] == undefined
       ) {
+        return true;
+      }
+      if (this.cena.mapa.tiles[pmy][pmx] != 0) {
         const tile = {
           x: pmx * SIZE + SIZE / 2,
           y: pmy * SIZE + SIZE / 2,
@@ -173,16 +187,19 @@ export default class Sprite {
         }
       }
     }
+    return false;
   }
 
   aplicaRestricoesCima(pmx, pmy) {
     const SIZE = this.cena.mapa.SIZE;
     if (this.vy < 0) {
       if (
-        this.cena.mapa.tiles[pmy] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != undefined &&
-        this.cena.mapa.tiles[pmy][pmx] != 0
+        this.cena.mapa.tiles[pmy] == undefined ||
+        this.cena.mapa.tiles[pmy][pmx] == undefined
       ) {
+        return true;
+      }
+      if (this.cena.mapa.tiles[pmy][pmx] != 0) {
         const tile = {
           x: pmx * SIZE + SIZE / 2,
           y: pmy * SIZE + SIZE / 2,
@@ -195,5 +212,6 @@ export default class Sprite {
         }
       }
     }
+    return false;
   }
 }

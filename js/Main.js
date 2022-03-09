@@ -32,9 +32,13 @@ canvas.height = configMapa.linhas * configMapa.tamanho;
 
 input.configurarTeclado({
   ArrowLeft: "MOVE_ESQUERDA",
+  a: "MOVE_ESQUERDA",
   ArrowRight: "MOVE_DIREITA",
+  d: "MOVE_DIREITA",
   ArrowUp: "MOVE_CIMA",
+  w: "MOVE_CIMA",
   ArrowDown: "MOVE_BAIXO",
+  s: "MOVE_BAIXO",
 });
 
 const cena1 = new Cena(canvas, assets);
@@ -130,10 +134,10 @@ cena1.iniciar();
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
-    case "s":
+    case "enter":
       cena1.iniciar();
       break;
-    case "p":
+    case "escape":
       cena1.parar();
       break;
   }

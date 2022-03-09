@@ -17,6 +17,7 @@ export default class Cannon extends Sprite {
     canvas = null,
     tank = null,
     velocidadeDoTiro = 800,
+    recoilDoTiro = 80,
   } = {}) {
     super({
       x,
@@ -36,6 +37,7 @@ export default class Cannon extends Sprite {
     this.tank = tank;
     this.angle = Math.pi;
     this.velocidadeDoTiro = velocidadeDoTiro;
+    this.recoilDoTiro = recoilDoTiro;
 
     canvas.addEventListener("mousemove", (e) => {
       const pos = this.getMousePos(e);
@@ -79,7 +81,6 @@ export default class Cannon extends Sprite {
       x: x - this.tank.x,
       y: y - this.tank.y,
     };
-    // Transforma em vetor unitário
     const norma = Math.sqrt(direcao.x ** 2 + direcao.y ** 2);
     direcao.x /= norma;
     direcao.y /= norma;
@@ -99,5 +100,9 @@ export default class Cannon extends Sprite {
         color: "yellow",
       })
     );
+
+    // Adiciona recoil
+    this.tank.vx -= direcao.x * this.recoilDoTiro;
+    this.tank.vy -= direcao.y * this.recoilDoTiro;
   }
 }

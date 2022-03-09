@@ -83,11 +83,14 @@ export default class Cena {
     this.aRemover.add(b);
   }
 
+  removeSprite(item) {
+    this.aRemover.add(item);
+  }
+
   removeSprites() {
     if (this.aRemover.size > 0) {
       this.tocaSomDeMorte();
 
-      this.aRemover.max;
       this.sprites = this.sprites.filter((item) => !this.aRemover.has(item));
       this.aRemover = new Set();
     }
