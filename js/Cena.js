@@ -1,7 +1,7 @@
 export default class Cena {
   /* É responsável por desennhar elementos na tela em uma animação.
    */
-  constructor(canvas, assets = null) {
+  constructor(canvas, assets = null, isDebugging = false) {
     this.canvas = canvas;
     this.assets = assets;
     this.ctx = canvas.getContext("2d");
@@ -13,6 +13,7 @@ export default class Cena {
     this.idAnim = null;
     this.aRemover = new Set();
     this.mapa = null;
+    this.isDebugging = isDebugging;
   }
 
   desenhar() {

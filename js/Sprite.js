@@ -13,6 +13,8 @@ export default class Sprite {
     controlar = () => {},
     deathSound = null,
     soundPriority = -Infinity,
+    colidivel = true,
+    restringivel = true,
   } = {}) {
     this.x = x;
     this.y = y;
@@ -27,18 +29,22 @@ export default class Sprite {
     this.controlar = controlar;
     this.deathSound = deathSound;
     this.soundPriority = soundPriority;
+    this.colidivel = colidivel;
+    this.restringivel = restringivel;
   }
 
   desenhar(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
-    ctx.strokeStyle = "blue";
-    ctx.strokeRect(
-      this.mx * this.cena.mapa.SIZE,
-      this.my * this.cena.mapa.SIZE,
-      this.cena.mapa.SIZE,
-      this.cena.mapa.SIZE
-    );
+    if (this.cena.isDebugging) {
+      ctx.strokeStyle = "blue";
+      ctx.strokeRect(
+        this.mx * this.cena.mapa.SIZE,
+        this.my * this.cena.mapa.SIZE,
+        this.cena.mapa.SIZE,
+        this.cena.mapa.SIZE
+      );
+    }
   }
 
   controlar(dt) {}
@@ -56,27 +62,31 @@ export default class Sprite {
   }
 
   colidiuCom(outro) {
-    return !(
-      this.x - this.w / 2 > outro.x + outro.w / 2 ||
-      this.x + this.w / 2 < outro.x - outro.w / 2 ||
-      this.y - this.h / 2 > outro.y + outro.h / 2 ||
-      this.y + this.h / 2 < outro.y - outro.h / 2
-    );
+    return this.colidivel && outro.colidivel
+      ? !(
+          this.x - this.w / 2 > outro.x + outro.w / 2 ||
+          this.x + this.w / 2 < outro.x - outro.w / 2 ||
+          this.y - this.h / 2 > outro.y + outro.h / 2 ||
+          this.y + this.h / 2 < outro.y - outro.h / 2
+        )
+      : false;
   }
 
   aplicaRestricoes(dt) {
-    this.aplicaRestricoesDireita(this.mx + 1, this.my - 1);
-    this.aplicaRestricoesDireita(this.mx + 1, this.my);
-    this.aplicaRestricoesDireita(this.mx + 1, this.my + 1);
-    this.aplicaRestricoesEsquerda(this.mx - 1, this.my - 1);
-    this.aplicaRestricoesEsquerda(this.mx - 1, this.my);
-    this.aplicaRestricoesEsquerda(this.mx - 1, this.my + 1);
-    this.aplicaRestricoesBaixo(this.mx - 1, this.my + 1);
-    this.aplicaRestricoesBaixo(this.mx, this.my + 1);
-    this.aplicaRestricoesBaixo(this.mx + 1, this.my + 1);
-    this.aplicaRestricoesCima(this.mx - 1, this.my - 1);
-    this.aplicaRestricoesCima(this.mx, this.my - 1);
-    this.aplicaRestricoesCima(this.mx + 1, this.my - 1);
+    if (this.restringivel) {
+      this.aplicaRestricoesDireita(this.mx + 1, this.my - 1);
+      this.aplicaRestricoesDireita(this.mx + 1, this.my);
+      this.aplicaRestricoesDireita(this.mx + 1, this.my + 1);
+      this.aplicaRestricoesEsquerda(this.mx - 1, this.my - 1);
+      this.aplicaRestricoesEsquerda(this.mx - 1, this.my);
+      this.aplicaRestricoesEsquerda(this.mx - 1, this.my + 1);
+      this.aplicaRestricoesBaixo(this.mx - 1, this.my + 1);
+      this.aplicaRestricoesBaixo(this.mx, this.my + 1);
+      this.aplicaRestricoesBaixo(this.mx + 1, this.my + 1);
+      this.aplicaRestricoesCima(this.mx - 1, this.my - 1);
+      this.aplicaRestricoesCima(this.mx, this.my - 1);
+      this.aplicaRestricoesCima(this.mx + 1, this.my - 1);
+    }
   }
 
   aplicaRestricoesDireita(pmx, pmy) {

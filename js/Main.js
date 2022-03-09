@@ -64,26 +64,74 @@ const pc = new Sprite({
   x: (configMapa.colunas * configMapa.tamanho) / 2,
   y: (configMapa.linhas * configMapa.tamanho) / 2,
   soundPriority: Infinity,
+  color: "#3a752a",
+  h: 30,
+  w: 30,
 });
 
-pc.controlar = function (dt) {
+const cannonHeight = 30;
+const cannon = new Sprite({
+  x: (configMapa.colunas * configMapa.tamanho) / 2,
+  y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
+  soundPriority: Infinity,
+  color: "#2e5c21",
+  h: cannonHeight,
+  w: 5,
+  colidivel: false,
+  restringivel: false,
+});
+
+pc.controlar = moveTanque;
+cannon.controlar = moveCannon;
+
+cena1.adicionar(pc);
+cena1.adicionar(cannon);
+
+const velocidadeTanque = 50;
+
+function moveTanque(dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
-    this.vx = -50;
+    this.vx = -velocidadeTanque;
   } else if (input.comandos.get("MOVE_DIREITA")) {
-    this.vx = +50;
+    this.vx = +velocidadeTanque;
   } else {
     this.vx = 0;
   }
 
   if (input.comandos.get("MOVE_CIMA")) {
-    this.vy = -50;
+    this.vy = -velocidadeTanque;
   } else if (input.comandos.get("MOVE_BAIXO")) {
-    this.vy = +50;
+    this.vy = +velocidadeTanque;
   } else {
     this.vy = 0;
   }
-};
-cena1.adicionar(pc);
+}
+
+function moveCannon(dt) {
+  if (input.comandos.get("MOVE_ESQUERDA")) {
+    this.vx = -velocidadeTanque;
+  } else if (input.comandos.get("MOVE_DIREITA")) {
+    this.vx = +velocidadeTanque;
+  } else {
+    this.vx = 0;
+  }
+
+  if (input.comandos.get("MOVE_CIMA")) {
+    this.vy = -velocidadeTanque;
+  } else if (input.comandos.get("MOVE_BAIXO")) {
+    this.vy = +velocidadeTanque;
+  } else {
+    this.vy = 0;
+  }
+}
+
+function getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top,
+  };
+}
 
 function perseguePC(dt) {
   this.vx = 25 * Math.sign(pc.x - this.x);
@@ -101,12 +149,6 @@ function geraInimigo(cena) {
   );
 }
 
-for (let i = 0; i < 3; i++) {
-  geraInimigo(cena1);
-}
-
-const geradorDeInimigos = setInterval(() => geraInimigo(cena1), 10000);
-
 cena1.iniciar();
 
 document.addEventListener("keydown", (e) => {
@@ -118,4 +160,11 @@ document.addEventListener("keydown", (e) => {
       cena1.parar();
       break;
   }
+});
+canvas.addEventListener("mousemove", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  console.log({
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+  });
 });
