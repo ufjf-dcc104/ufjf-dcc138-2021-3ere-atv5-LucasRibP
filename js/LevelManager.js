@@ -1,11 +1,17 @@
 export default class LevelManager {
-  constructor(geraPlayer, geraInimigo, onWinLevel, onLoseLevel, cena) {
+  constructor({ geraPlayer, geraInimigo, onWinLevel, onLoseLevel, cena }) {
     this.curLevel = 0; // Level 0 é o menu
     this.geraPlayer = geraPlayer;
     this.geraInimigo = geraInimigo;
     this.onWinLevel = onWinLevel;
     this.onLoseLevel = onLoseLevel;
     this.cena = cena;
+  }
+
+  iniciaJogo() {
+    this.curLevel = 1;
+    this.cena.clearSprites();
+    this.initializeLevel();
   }
 
   winLevel() {
@@ -16,13 +22,13 @@ export default class LevelManager {
   }
 
   initializeLevel() {
-    cena.clearSprites();
+    this.cena.clearSprites();
 
     if (this.curLevel == 0) {
     } else {
-      this.geraPlayer(cena);
+      this.geraPlayer(this.cena);
       for (let i = 0; i < this.curLevel + 2; i++) {
-        this.geraInimigo(cena);
+        this.geraInimigo(this.cena);
       }
       this.cena.iniciar();
     }

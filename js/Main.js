@@ -6,10 +6,14 @@ import Cannon from "./Cannon.js";
 import modeloMapa from "../maps/mapa1.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
+import LevelManager from "./LevelManager.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
+
+const aceleracaoTanque = 200;
+const cannonHeight = 30;
 
 assets.carregaImagem("ice", "assets/ice0.png");
 assets.carregaImagem("water_btm", "assets/dngn_shallow_bord_btm.png");
@@ -64,37 +68,52 @@ const tileIdToTile = {
 
 mapa1.carregaMapa(modeloMapa, tileIdToTile);
 cena1.configuraMapa(mapa1);
+const levelManager = new LevelManager({
+  geraPlayer: (scene) => {
+    const pc = new Sprite({
+      x: (configMapa.colunas * configMapa.tamanho) / 2,
+      y: (configMapa.linhas * configMapa.tamanho) / 2,
+      soundPriority: Infinity,
+      color: "#3a752a",
+      speedDecline: 0.8,
+      h: 30,
+      w: 30,
+    });
 
-const pc = new Sprite({
-  x: (configMapa.colunas * configMapa.tamanho) / 2,
-  y: (configMapa.linhas * configMapa.tamanho) / 2,
-  soundPriority: Infinity,
-  color: "#3a752a",
-  speedDecline: 0.8,
-  h: 30,
-  w: 30,
+    const cannon = new Cannon({
+      x: (configMapa.colunas * configMapa.tamanho) / 2,
+      y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
+      soundPriority: Infinity,
+      color: "#2e5c21",
+      h: cannonHeight,
+      w: 5,
+      colidivel: false,
+      restringivel: false,
+      canvas: canvas,
+      tank: pc,
+    });
+
+    pc.controlar = moveTanque;
+    scene.adicionar(pc);
+    scene.adicionar(cannon);
+  },
+  geraInimigo: (scene) => {
+    scene.adicionar(
+      new Sprite({
+        ...scene.mapa.geraPosicaoValidaAleatoria([9]),
+        color: "red",
+        soundPriority: 0,
+      })
+    );
+  },
+  onWinLevel: () => {
+    console.log("You won :D");
+  },
+  onLoseLevel: () => {
+    console.log("You lost :(");
+  },
+  cena: cena1,
 });
-
-const cannonHeight = 30;
-const cannon = new Cannon({
-  x: (configMapa.colunas * configMapa.tamanho) / 2,
-  y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
-  soundPriority: Infinity,
-  color: "#2e5c21",
-  h: cannonHeight,
-  w: 5,
-  colidivel: false,
-  restringivel: false,
-  canvas: canvas,
-  tank: pc,
-});
-
-pc.controlar = moveTanque;
-
-cena1.adicionar(pc);
-cena1.adicionar(cannon);
-
-const aceleracaoTanque = 200;
 
 function moveTanque(dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
@@ -114,26 +133,7 @@ function moveTanque(dt) {
   }
 }
 
-function perseguePC(dt) {
-  this.vx = 25 * Math.sign(pc.x - this.x);
-  this.vy = 25 * Math.sign(pc.y - this.y);
-}
-
-function geraInimigo(cena) {
-  cena.adicionar(
-    new Sprite({
-      ...cena.mapa.geraPosicaoValidaAleatoria([9]),
-      color: "red",
-      soundPriority: 0,
-    })
-  );
-}
-
-geraInimigo(cena1);
-geraInimigo(cena1);
-geraInimigo(cena1);
-
-cena1.iniciar();
+levelManager.iniciaJogo();
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
