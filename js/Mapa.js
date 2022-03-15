@@ -45,13 +45,13 @@ export default class Mapa {
     return { x: (coluna + 0.5) * this.SIZE, y: (linha + 0.5) * this.SIZE };
   }
 
-  geraPosicaoValidaAleatoria(invalidList = [1]) {
-    if (this.tiles.length == 0) return;
+  geraPosicaoValidaAleatoria(validList = [0]) {
+    if (this.tiles.length == 0 || validList.length == 0) return;
 
     let randLine = Math.floor(Math.random() * this.LINHAS);
     let randCol = Math.floor(Math.random() * this.COLUNAS);
 
-    while (invalidList.includes(this.tiles[randLine][randCol])) {
+    while (!validList.includes(this.tiles[randLine][randCol])) {
       randLine = Math.floor(Math.random() * this.LINHAS);
       randCol = Math.floor(Math.random() * this.COLUNAS);
     }

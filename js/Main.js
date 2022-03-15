@@ -122,13 +122,16 @@ function perseguePC(dt) {
 function geraInimigo(cena) {
   cena.adicionar(
     new Sprite({
-      ...cena.mapa.geraPosicaoValidaAleatoria(),
+      ...cena.mapa.geraPosicaoValidaAleatoria([9]),
       color: "red",
-      controlar: perseguePC,
       soundPriority: 0,
     })
   );
 }
+
+geraInimigo(cena1);
+geraInimigo(cena1);
+geraInimigo(cena1);
 
 cena1.iniciar();
 
