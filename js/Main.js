@@ -2,6 +2,7 @@ import AssetManager from "./AssetManager.js";
 import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
+import Cannon from "./Cannon.js";
 import modeloMapa from "../maps/mapa1.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
@@ -31,9 +32,13 @@ canvas.height = configMapa.linhas * configMapa.tamanho;
 
 input.configurarTeclado({
   ArrowLeft: "MOVE_ESQUERDA",
+  a: "MOVE_ESQUERDA",
   ArrowRight: "MOVE_DIREITA",
+  d: "MOVE_DIREITA",
   ArrowUp: "MOVE_CIMA",
+  w: "MOVE_CIMA",
   ArrowDown: "MOVE_BAIXO",
+  s: "MOVE_BAIXO",
 });
 
 const cena1 = new Cena(canvas, assets);
@@ -64,26 +69,50 @@ const pc = new Sprite({
   x: (configMapa.colunas * configMapa.tamanho) / 2,
   y: (configMapa.linhas * configMapa.tamanho) / 2,
   soundPriority: Infinity,
+  color: "#3a752a",
+  speedDecline: 0.8,
+  h: 30,
+  w: 30,
 });
 
-pc.controlar = function (dt) {
+const cannonHeight = 30;
+const cannon = new Cannon({
+  x: (configMapa.colunas * configMapa.tamanho) / 2,
+  y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
+  soundPriority: Infinity,
+  color: "#2e5c21",
+  h: cannonHeight,
+  w: 5,
+  colidivel: false,
+  restringivel: false,
+  canvas: canvas,
+  tank: pc,
+});
+
+pc.controlar = moveTanque;
+
+cena1.adicionar(pc);
+cena1.adicionar(cannon);
+
+const aceleracaoTanque = 200;
+
+function moveTanque(dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
-    this.vx = -50;
+    this.ax = -aceleracaoTanque;
   } else if (input.comandos.get("MOVE_DIREITA")) {
-    this.vx = +50;
+    this.ax = +aceleracaoTanque;
   } else {
-    this.vx = 0;
+    this.ax = 0;
   }
 
   if (input.comandos.get("MOVE_CIMA")) {
-    this.vy = -50;
+    this.ay = -aceleracaoTanque;
   } else if (input.comandos.get("MOVE_BAIXO")) {
-    this.vy = +50;
+    this.ay = +aceleracaoTanque;
   } else {
-    this.vy = 0;
+    this.ay = 0;
   }
-};
-cena1.adicionar(pc);
+}
 
 function perseguePC(dt) {
   this.vx = 25 * Math.sign(pc.x - this.x);
@@ -101,20 +130,14 @@ function geraInimigo(cena) {
   );
 }
 
-for (let i = 0; i < 3; i++) {
-  geraInimigo(cena1);
-}
-
-const geradorDeInimigos = setInterval(() => geraInimigo(cena1), 10000);
-
 cena1.iniciar();
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
-    case "s":
+    case "enter":
       cena1.iniciar();
       break;
-    case "p":
+    case "escape":
       cena1.parar();
       break;
   }
