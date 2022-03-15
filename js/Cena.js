@@ -14,6 +14,7 @@ export default class Cena {
     this.aRemover = new Set();
     this.mapa = null;
     this.isDebugging = isDebugging;
+    this.enemyCount = 0;
   }
 
   desenhar() {
@@ -38,6 +39,7 @@ export default class Cena {
   }
 
   clearSprites() {
+    this.sprites.forEach((it) => it.onRemove());
     this.sprites = [];
     this.aRemover = new Set();
   }
@@ -84,6 +86,8 @@ export default class Cena {
   }
 
   quandoColidir(a, b) {
+    a.onDeath();
+    b.onDeath();
     this.aRemover.add(a);
     this.aRemover.add(b);
   }
@@ -97,6 +101,7 @@ export default class Cena {
       this.tocaSomDeMorte();
 
       this.sprites = this.sprites.filter((item) => !this.aRemover.has(item));
+      this.aRemover.forEach((it) => it.onRemove());
       this.aRemover = new Set();
     }
   }

@@ -18,6 +18,8 @@ export default class Sprite {
     raio = 100,
     color = "white",
     controlar = () => {},
+    onDeath = () => {},
+    onRemove = () => {},
     deathSound = null,
     soundPriority = -Infinity,
     colidivel = true,
@@ -45,6 +47,8 @@ export default class Sprite {
     this.colidivel = colidivel;
     this.restringivel = restringivel;
     this.disappearsUpponScreenExit = disappearsUpponScreenExit;
+    this.onDeath = onDeath;
+    this.onRemove = onRemove;
   }
 
   desenhar(ctx) {

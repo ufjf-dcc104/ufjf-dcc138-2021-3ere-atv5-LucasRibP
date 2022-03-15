@@ -18,6 +18,8 @@ export default class Cannon extends Sprite {
     tank = null,
     velocidadeDoTiro = 800,
     recoilDoTiro = 80,
+    onDeath = () => {},
+    onRemove = () => {},
   } = {}) {
     super({
       x,
@@ -39,15 +41,30 @@ export default class Cannon extends Sprite {
     this.velocidadeDoTiro = velocidadeDoTiro;
     this.recoilDoTiro = recoilDoTiro;
 
-    canvas.addEventListener("mousemove", (e) => {
+    const onMouseMove = (e) => {
       const pos = this.getMousePos(e);
       this.rodaCannon(pos.x, pos.y);
-    });
+    };
 
-    canvas.addEventListener("click", (e) => {
+    const onMouseClick = (e) => {
       const pos = this.getMousePos(e);
       this.atira(pos.x, pos.y);
-    });
+    };
+
+    canvas.addEventListener("mousemove", onMouseMove, false);
+    canvas.addEventListener("click", onMouseClick, false);
+
+    this.onDeath = () => {
+      canvas.removeEventListener("mousemove", onMouseMove, false);
+      canvas.removeEventListener("click", onMouseClick, false);
+      onDeath();
+    };
+
+    this.onRemove = () => {
+      canvas.removeEventListener("mousemove", onMouseMove, false);
+      canvas.removeEventListener("click", onMouseClick, false);
+      onRemove();
+    };
   }
 
   getMousePos(e) {

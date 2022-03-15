@@ -94,6 +94,11 @@ const levelManager = new LevelManager({
     });
 
     pc.controlar = moveTanque;
+    pc.onDeath = () => {
+      scene.removeSprite(cannon);
+      levelManager.onLoseLevel();
+    };
+
     scene.adicionar(pc);
     scene.adicionar(cannon);
   },
@@ -103,8 +108,16 @@ const levelManager = new LevelManager({
         ...scene.mapa.geraPosicaoValidaAleatoria([9]),
         color: "red",
         soundPriority: 0,
+        onDeath: () => {
+          scene.enemyCount -= 1;
+          if (scene.enemyCount == 0) {
+            levelManager.winLevel();
+          }
+        },
       })
     );
+
+    scene.enemyCount += 1;
   },
   onWinLevel: () => {
     console.log("You won :D");
