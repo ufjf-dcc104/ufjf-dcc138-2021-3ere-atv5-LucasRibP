@@ -15,6 +15,7 @@ const assets = new AssetManager(mixer);
 const aceleracaoTanque = 200;
 const cannonHeight = 30;
 
+assets.carregaImagem("mageSheet", "assets/mage_sheet.png");
 assets.carregaImagem("ice", "assets/ice0.png");
 assets.carregaImagem("water_btm", "assets/dngn_shallow_bord_btm.png");
 assets.carregaImagem("water_lft", "assets/dngn_shallow_bord_lft.png");
@@ -64,6 +65,7 @@ const tileIdToTile = {
   7: [assets.img("ice"), assets.img("water_btm"), assets.img("water_lft")],
   8: [assets.img("ice"), assets.img("water_lft")],
   9: [assets.img("water")],
+  10: [assets.img("water")], // Não gerar magos na bordas
 };
 
 mapa1.carregaMapa(modeloMapa, tileIdToTile);
@@ -103,21 +105,40 @@ const levelManager = new LevelManager({
     scene.adicionar(cannon);
   },
   geraInimigo: (scene) => {
+    let pos = scene.mapa.geraPosicaoValidaAleatoria([9]);
+    let posStr = `${pos.line} - ${pos.col}`;
+
+    while (levelManager.posInimigosGerados.includes(posStr)) {
+      pos = scene.mapa.geraPosicaoValidaAleatoria([9]);
+      posStr = `${pos.line} - ${pos.col}`;
+    }
+    levelManager.posInimigosGerados.push(posStr);
+    scene.enemyCount += 1;
+
     scene.adicionar(
       new Sprite({
-        ...scene.mapa.geraPosicaoValidaAleatoria([9]),
+        ...pos,
         color: "red",
         soundPriority: 0,
+        w: 24,
+        h: 48,
+        spriteAnim: {
+          start: { x: 0, y: 0 },
+          dim: { h: 64, w: 32 },
+          delta: { x: 32, y: 0 },
+          image: "mageSheet",
+          nStates: 5,
+          stateDelay: 200,
+        },
         onDeath: () => {
           scene.enemyCount -= 1;
           if (scene.enemyCount == 0) {
             levelManager.winLevel();
           }
         },
+        assetManager: assets,
       })
     );
-
-    scene.enemyCount += 1;
   },
   onWinLevel: () => {
     console.log("You won :D");
