@@ -37,6 +37,11 @@ export default class Cena {
     this.sprites.push(sprite);
   }
 
+  clearSprites() {
+    this.sprites = [];
+    this.aRemover = new Set();
+  }
+
   passo(dt) {
     if (!this.assets.acabou()) return;
 
