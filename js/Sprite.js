@@ -50,9 +50,19 @@ export default class Sprite {
     this.restringivel = restringivel;
     this.disappearsUpponScreenExit = disappearsUpponScreenExit;
     this.onDeath = onDeath;
-    this.onRemove = onRemove;
+    this.onRemove = () => {
+      this.timedEvents.forEach((e) => {
+        clearInterval(e);
+      });
+      onRemove();
+    };
     this.spriteAnim = spriteAnim;
     this.assetManager = assetManager;
+    this.timedEvents = [];
+  }
+
+  addTimedEvent(delay, event) {
+    this.timedEvents.push(setInterval(event.bind(this), delay));
   }
 
   desenhar(ctx) {

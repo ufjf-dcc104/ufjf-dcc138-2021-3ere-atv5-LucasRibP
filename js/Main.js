@@ -14,6 +14,7 @@ const assets = new AssetManager(mixer);
 
 const aceleracaoTanque = 200;
 const cannonHeight = 30;
+const fireballRadius = 10;
 
 assets.carregaImagem("mageSheet", "assets/mage_sheet.png");
 assets.carregaImagem("ice", "assets/ice0.png");
@@ -101,6 +102,7 @@ const levelManager = new LevelManager({
       levelManager.onLoseLevel();
     };
 
+    levelManager.player = pc;
     scene.adicionar(pc);
     scene.adicionar(cannon);
   },
@@ -115,30 +117,31 @@ const levelManager = new LevelManager({
     levelManager.posInimigosGerados.push(posStr);
     scene.enemyCount += 1;
 
-    scene.adicionar(
-      new Sprite({
-        ...pos,
-        color: "red",
-        soundPriority: 0,
-        w: 24,
-        h: 48,
-        spriteAnim: {
-          start: { x: 0, y: 0 },
-          dim: { h: 64, w: 32 },
-          delta: { x: 32, y: 0 },
-          image: "mageSheet",
-          nStates: 5,
-          stateDelay: 200,
-        },
-        onDeath: () => {
-          scene.enemyCount -= 1;
-          if (scene.enemyCount == 0) {
-            levelManager.winLevel();
-          }
-        },
-        assetManager: assets,
-      })
-    );
+    const enemy = new Sprite({
+      ...pos,
+      color: "red",
+      soundPriority: 0,
+      w: 24,
+      h: 48,
+      spriteAnim: {
+        start: { x: 0, y: 0 },
+        dim: { h: 64, w: 32 },
+        delta: { x: 32, y: 0 },
+        image: "mageSheet",
+        nStates: 5,
+        stateDelay: 200,
+      },
+      onDeath: () => {
+        scene.enemyCount -= 1;
+        if (scene.enemyCount == 0) {
+          levelManager.winLevel();
+        }
+      },
+      assetManager: assets,
+    });
+
+    enemy.addTimedEvent(1000 + 500 * Math.random(), atiraNoTanque);
+    scene.adicionar(enemy);
   },
   onWinLevel: () => {
     console.log("You won :D");
@@ -165,6 +168,36 @@ function moveTanque(dt) {
   } else {
     this.ay = 0;
   }
+}
+
+function atiraNoTanque() {
+  const pc = levelManager.getPlayer();
+  const shotSpeed = levelManager.getShotSpeed();
+  const scene = levelManager.getCena();
+
+  const direcao = {
+    x: pc.x - this.x,
+    y: pc.y - this.y,
+  };
+  const norma = Math.sqrt(direcao.x ** 2 + direcao.y ** 2);
+  direcao.x /= norma;
+  direcao.y /= norma;
+
+  const origemTiro = {
+    x: this.x + direcao.x * this.h,
+    y: this.y + direcao.y * this.h,
+  };
+
+  scene.adicionar(
+    new Sprite({
+      ...origemTiro,
+      vx: direcao.x * shotSpeed,
+      vy: direcao.y * shotSpeed,
+      raio: fireballRadius,
+      ehBola: true,
+      color: "red",
+    })
+  );
 }
 
 levelManager.iniciaJogo();

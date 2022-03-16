@@ -8,12 +8,25 @@ export default class LevelManager {
     this.onLoseLevel = onLoseLevel;
     this.cena = cena;
     this.posInimigosGerados = [];
+    this.player = null;
   }
 
   iniciaJogo() {
     this.curLevel = 1;
     this.cena.clearSprites();
     this.initializeLevel();
+  }
+
+  getPlayer() {
+    return this.player;
+  }
+
+  getShotSpeed() {
+    return 100 + 50 * (this.curLevel / this.totalLevels);
+  }
+
+  getCena() {
+    return this.cena;
   }
 
   winLevel() {
