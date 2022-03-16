@@ -18,13 +18,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  display: flex;
 }
 
 .Home_menu_text {
   text-align: center;
 }
 
-.Pop_up {
+.Pop_up_wrapper {
   position: absolute;
+  height: 544px;
+  width: 704px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Pop_up {
+  height: 200px;
+  width: 300px;
+  display: flex;
+  background-color: green;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

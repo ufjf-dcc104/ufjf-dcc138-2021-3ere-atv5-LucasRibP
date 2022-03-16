@@ -210,8 +210,5 @@ document.addEventListener("keydown", (e) => {
     case "Enter":
       levelManager.iniciaJogo();
       break;
-    case "Escape":
-      cena1.parar();
-      break;
   }
 });
