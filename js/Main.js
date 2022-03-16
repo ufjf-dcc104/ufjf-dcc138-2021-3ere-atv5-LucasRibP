@@ -104,7 +104,7 @@ const levelManager = new LevelManager({
     pc.controlar = moveTanque;
     pc.onDeath = () => {
       scene.removeSprite(cannon);
-      levelManager.onLoseLevel();
+      levelManager.loseLevel();
     };
 
     levelManager.player = pc;
@@ -208,7 +208,7 @@ function atiraNoTanque() {
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "Enter":
-      levelManager.iniciaJogo();
+      levelManager.userConfirmation();
       break;
   }
 });

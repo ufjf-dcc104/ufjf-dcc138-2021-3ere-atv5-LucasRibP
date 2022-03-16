@@ -11,6 +11,32 @@ export default class LevelManager {
     this.player = null;
     this.homeElement = document.querySelector(".Home_menu");
     this.canvas = document.querySelector("canvas");
+    this.isPopUpOn = false;
+    this.popUpWrapperElement = document.querySelector(".Pop_up_wrapper");
+    this.popUpTitleElement = document.querySelector(".Pop_up_title");
+    this.popUpTextElement = document.querySelector(".Pop_up_text");
+  }
+
+  userConfirmation() {
+    if (this.curLevel == -1) {
+      this.curLevel = 0;
+      this.isPopUpOn = false;
+      this.popUpWrapperElement.style.display = "none";
+      this.initializeLevel();
+    } else if (this.curLevel == 0) {
+      this.iniciaJogo();
+    } else if (this.isPopUpOn) {
+      this.isPopUpOn = false;
+      this.popUpWrapperElement.style.display = "none";
+      this.initializeLevel();
+    }
+  }
+
+  raisePopUp(title, text) {
+    this.popUpTitleElement.textContent = title;
+    this.popUpTextElement.textContent = text;
+    this.isPopUpOn = true;
+    this.popUpWrapperElement.style.display = "flex";
   }
 
   iniciaJogo() {
@@ -33,13 +59,16 @@ export default class LevelManager {
 
   winLevel() {
     this.cena.parar();
+    this.cena.clearSprites();
     this.onWinLevel();
-    console.log(this.curLevel);
     if (this.curLevel == this.totalLevels) {
       this.winGame();
     } else {
       this.curLevel += 1;
-      this.initializeLevel();
+      this.raisePopUp(
+        "Nível Vencido!",
+        `Pressione Enter para ir para o nível ${this.curLevel}`
+      );
     }
   }
 
@@ -65,8 +94,13 @@ export default class LevelManager {
 
   loseLevel() {
     this.cena.parar();
+    this.cena.clearSprites();
     this.onLoseLevel();
-    this.curLevel = 0;
-    this.initializeLevel();
+    const loseLevel = this.curLevel;
+    this.curLevel = -1;
+    this.raisePopUp(
+      "Game Over",
+      `Você sobreviveu até o nível ${loseLevel}! Pressione Enter para voltar para o menu`
+    );
   }
 }

@@ -28,7 +28,7 @@
   position: absolute;
   height: 544px;
   width: 704px;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -42,4 +42,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.Pop_up_text {
+  margin: 0 10%;
+  text-align: center;
 }
