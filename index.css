@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+.container {
+  position: relative;
+  font-family: "VT323", monospace;
+}
+
+.container canvas {
+  position: absolute;
+}
+
+.Home_menu {
+  position: absolute;
+  height: 544px;
+  width: 704px;
+  background-color: gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.Home_menu_text {
+  text-align: center;
+}
+
+.Pop_up {
+  position: absolute;
+}

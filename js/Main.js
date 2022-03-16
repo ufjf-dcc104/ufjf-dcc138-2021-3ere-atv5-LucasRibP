@@ -205,14 +205,12 @@ function atiraNoTanque() {
   );
 }
 
-levelManager.iniciaJogo();
-
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
-    case "enter":
-      cena1.iniciar();
+    case "Enter":
+      levelManager.iniciaJogo();
       break;
-    case "escape":
+    case "Escape":
       cena1.parar();
       break;
   }

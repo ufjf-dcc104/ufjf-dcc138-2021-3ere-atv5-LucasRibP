@@ -9,6 +9,8 @@ export default class LevelManager {
     this.cena = cena;
     this.posInimigosGerados = [];
     this.player = null;
+    this.homeElement = document.querySelector(".Home_menu");
+    this.canvas = document.querySelector("canvas");
   }
 
   iniciaJogo() {
@@ -50,7 +52,9 @@ export default class LevelManager {
     this.posInimigosGerados = [];
 
     if (this.curLevel == 0) {
+      this.homeElement.style.display = "flex";
     } else {
+      this.homeElement.style.display = "none";
       this.geraPlayer(this.cena);
       for (let i = 0; i < this.curLevel + 2; i++) {
         this.geraInimigo(this.cena);
