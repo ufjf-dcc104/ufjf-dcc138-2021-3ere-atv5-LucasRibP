@@ -4,7 +4,7 @@ Esse jogo é um trabalho de Lucas Ribeiro Pessamilio, um aluno da Universidade F
 
 ## Descrição do Jogo
 
-Ao invadir a URSS no fim da guerra fria, seu tanque ficou preso em um bloco de gelo. Enquanto você pensava em como escapar, o magos russos te encontraram. Atire nos magos russos, e sobreviva o máximo possível, antes que eles te destruam com sua magia anti-tanque, tudo isso sem cair na água.
+Ao invadir a URSS no fim da guerra fria, seu tanque ficou preso em um bloco de gelo. Enquanto você pensava em como escapar, o magos russos te encontraram. Atire nos magos russos, e sobreviva o máximo possível até seus companheiros chegarem, antes que eles te destruam com sua magia anti-tanque, tudo isso sem cair na água.
 
 ## Controles
 
