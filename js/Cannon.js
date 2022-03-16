@@ -10,6 +10,7 @@ export default class Cannon extends Sprite {
     h = 20,
     color = "white",
     controlar = () => {},
+    shotSound = null,
     deathSound = null,
     soundPriority = -Infinity,
     colidivel = true,
@@ -19,6 +20,7 @@ export default class Cannon extends Sprite {
     velocidadeDoTiro = 800,
     recoilDoTiro = 80,
     onDeath = () => {},
+    assetManager = null,
     onRemove = () => {},
   } = {}) {
     super({
@@ -34,12 +36,14 @@ export default class Cannon extends Sprite {
       soundPriority,
       colidivel,
       restringivel,
+      assetManager,
     });
     this.canvas = canvas;
     this.tank = tank;
     this.angle = Math.pi;
     this.velocidadeDoTiro = velocidadeDoTiro;
     this.recoilDoTiro = recoilDoTiro;
+    this.shotSound = shotSound;
 
     const onMouseMove = (e) => {
       const pos = this.getMousePos(e);
@@ -106,6 +110,8 @@ export default class Cannon extends Sprite {
       x: this.tank.x + direcao.x * this.h,
       y: this.tank.y + direcao.y * this.h,
     };
+
+    this.assetManager.playAudioFromKey(this.shotSound);
 
     this.cena.adicionar(
       new Sprite({

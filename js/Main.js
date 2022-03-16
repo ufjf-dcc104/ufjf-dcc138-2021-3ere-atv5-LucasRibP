@@ -23,8 +23,10 @@ assets.carregaImagem("water_lft", "assets/dngn_shallow_bord_lft.png");
 assets.carregaImagem("water_rgt", "assets/dngn_shallow_bord_rgt.png");
 assets.carregaImagem("water_top", "assets/dngn_shallow_bord_top.png");
 assets.carregaImagem("water", "assets/dngn_shallow_water.png");
-// assets.carregaAudio("boom", "assets/boom.wav");
-// assets.carregaAudio("lose", "assets/lose.wav");
+assets.carregaAudio("atira", "assets/atira.wav");
+assets.carregaAudio("mata", "assets/mata.wav");
+assets.carregaAudio("morre", "assets/morre.wav");
+assets.carregaAudio("ganha", "assets/ganha.wav");
 
 const canvas = document.querySelector("canvas");
 const configMapa = {
@@ -91,6 +93,8 @@ const levelManager = new LevelManager({
     const cannon = new Cannon({
       x: (configMapa.colunas * configMapa.tamanho) / 2,
       y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
+      shotSound: "atira",
+      assetManager: assets,
       soundPriority: Infinity,
       color: "#2e5c21",
       h: cannonHeight,
@@ -137,6 +141,7 @@ const levelManager = new LevelManager({
         stateDelay: 200,
       },
       onDeath: () => {
+        assets.playAudioFromKey("mata");
         scene.enemyCount -= 1;
         if (scene.enemyCount == 0) {
           levelManager.winLevel();
@@ -149,9 +154,11 @@ const levelManager = new LevelManager({
     scene.adicionar(enemy);
   },
   onWinLevel: () => {
+    assets.playAudioFromKey("ganha");
     console.log("You won :D");
   },
   onLoseLevel: () => {
+    assets.playAudioFromKey("morre");
     console.log("You lost :(");
   },
   cena: cena1,
