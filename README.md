@@ -39,3 +39,5 @@ A estética desse jogo se basea completamente em desafio, o que é comum em jogo
 ## Atribuíções
 
 - As tiles foram feitas por Chris Ramons no site http://opengameart.org/content/dungeon-crawl-32x32-tiles
+- As sprites dos magos foram feitas por Sollision no site https://opengameart.org/content/mage-sprites-idle-and-walking
+- Os sons foram obtidos do https://sfbgames.itch.io/chiptone
