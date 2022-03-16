@@ -74,6 +74,12 @@ export default class LevelManager {
 
   winGame() {
     console.log("Você venceu o jogo!");
+    this.curLevel = -1;
+    this.raisePopUp(
+      "Você Venceu",
+      `Você sobreviveu aos terriveis magos e seus colegas vieram lhe resgatar, parabéns soldado!
+      Pressione Enter para ir para o Menu`
+    );
   }
 
   initializeLevel() {
