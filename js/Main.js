@@ -81,6 +81,11 @@ const levelManager = new LevelManager({
       speedDecline: 0.8,
       h: 30,
       w: 30,
+      forbiddenTiles: [9, 10],
+      onForbiddenTileEntry: () => {
+        levelManager.loseLevel();
+      },
+      restringivel: true,
     });
 
     const cannon = new Cannon({

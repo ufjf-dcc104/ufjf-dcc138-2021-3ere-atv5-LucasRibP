@@ -27,6 +27,8 @@ export default class Sprite {
     disappearsUpponScreenExit = true,
     spriteAnim = null,
     assetManager = null,
+    forbiddenTiles = [],
+    onForbiddenTileEntry = () => {},
   } = {}) {
     this.x = x;
     this.y = y;
@@ -59,6 +61,8 @@ export default class Sprite {
     this.spriteAnim = spriteAnim;
     this.assetManager = assetManager;
     this.timedEvents = [];
+    this.forbiddenTiles = forbiddenTiles;
+    this.onForbiddenTileEntry = onForbiddenTileEntry;
   }
 
   addTimedEvent(delay, event) {
@@ -132,6 +136,9 @@ export default class Sprite {
   passo(dt) {
     this.controlar(dt);
     this.mover(dt);
+    if (this.forbiddenTiles.includes(this.cena.mapa.tiles[this.my][this.mx])) {
+      this.onForbiddenTileEntry();
+    }
   }
 
   colidiuCom(outro) {
