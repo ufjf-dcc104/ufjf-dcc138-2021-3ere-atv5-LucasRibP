@@ -18,11 +18,17 @@ export default class Sprite {
     raio = 100,
     color = "white",
     controlar = () => {},
+    onDeath = () => {},
+    onRemove = () => {},
     deathSound = null,
     soundPriority = -Infinity,
     colidivel = true,
     restringivel = true,
     disappearsUpponScreenExit = true,
+    spriteAnim = null,
+    assetManager = null,
+    forbiddenTiles = [],
+    onForbiddenTileEntry = () => {},
   } = {}) {
     this.x = x;
     this.y = y;
@@ -45,25 +51,74 @@ export default class Sprite {
     this.colidivel = colidivel;
     this.restringivel = restringivel;
     this.disappearsUpponScreenExit = disappearsUpponScreenExit;
+    this.onDeath = onDeath;
+    this.onRemove = () => {
+      this.timedEvents.forEach((e) => {
+        clearInterval(e);
+      });
+      onRemove();
+    };
+    this.spriteAnim = spriteAnim;
+    this.assetManager = assetManager;
+    this.timedEvents = [];
+    this.forbiddenTiles = forbiddenTiles;
+    this.onForbiddenTileEntry = onForbiddenTileEntry;
+  }
+
+  addTimedEvent(delay, event) {
+    this.timedEvents.push(setInterval(event.bind(this), delay));
   }
 
   desenhar(ctx) {
-    ctx.fillStyle = this.color;
-    if (this.ehBola) {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.raio, 0, 2 * Math.PI);
-      ctx.fill();
-    } else {
-      ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
-    }
-    if (this.cena.isDebugging) {
-      ctx.strokeStyle = "blue";
-      ctx.strokeRect(
-        this.mx * this.cena.mapa.SIZE,
-        this.my * this.cena.mapa.SIZE,
-        this.cena.mapa.SIZE,
-        this.cena.mapa.SIZE
+    if (this.spriteAnim != null) {
+      if (this.spriteState == undefined) this.spriteState = 0;
+      if (this.lastSpriteStateUpdate == undefined)
+        this.lastSpriteStateUpdate = Date.now();
+
+      if (
+        Date.now() - this.lastSpriteStateUpdate >
+        this.spriteAnim.stateDelay
+      ) {
+        this.lastSpriteStateUpdate = Date.now();
+        this.spriteState = (this.spriteState + 1) % this.spriteAnim.nStates;
+      }
+
+      const image = this.assetManager.img(this.spriteAnim.image);
+
+      const sheetPos = {
+        x: this.spriteAnim.start.x + this.spriteAnim.delta.x * this.spriteState,
+        y: this.spriteAnim.start.y + this.spriteAnim.delta.y * this.spriteState,
+      };
+
+      ctx.drawImage(
+        image,
+        sheetPos.x,
+        sheetPos.y,
+        this.spriteAnim.dim.w,
+        this.spriteAnim.dim.h,
+        this.x - this.w / 2,
+        this.y - this.h / 2,
+        this.w,
+        this.h
       );
+    } else {
+      ctx.fillStyle = this.color;
+      if (this.ehBola) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.raio, 0, 2 * Math.PI);
+        ctx.fill();
+      } else {
+        ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+      }
+      if (this.cena.isDebugging) {
+        ctx.strokeStyle = "blue";
+        ctx.strokeRect(
+          this.mx * this.cena.mapa.SIZE,
+          this.my * this.cena.mapa.SIZE,
+          this.cena.mapa.SIZE,
+          this.cena.mapa.SIZE
+        );
+      }
     }
   }
 
@@ -81,6 +136,9 @@ export default class Sprite {
   passo(dt) {
     this.controlar(dt);
     this.mover(dt);
+    if (this.forbiddenTiles.includes(this.cena.mapa.tiles[this.my][this.mx])) {
+      this.onForbiddenTileEntry();
+    }
   }
 
   colidiuCom(outro) {

@@ -6,11 +6,17 @@ import Cannon from "./Cannon.js";
 import modeloMapa from "../maps/mapa1.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
+import LevelManager from "./LevelManager.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
 
+const aceleracaoTanque = 200;
+const cannonHeight = 30;
+const fireballRadius = 10;
+
+assets.carregaImagem("mageSheet", "assets/mage_sheet.png");
 assets.carregaImagem("ice", "assets/ice0.png");
 assets.carregaImagem("water_btm", "assets/dngn_shallow_bord_btm.png");
 assets.carregaImagem("water_lft", "assets/dngn_shallow_bord_lft.png");
@@ -60,41 +66,96 @@ const tileIdToTile = {
   7: [assets.img("ice"), assets.img("water_btm"), assets.img("water_lft")],
   8: [assets.img("ice"), assets.img("water_lft")],
   9: [assets.img("water")],
+  10: [assets.img("water")], // Não gerar magos na bordas
 };
 
 mapa1.carregaMapa(modeloMapa, tileIdToTile);
 cena1.configuraMapa(mapa1);
+const levelManager = new LevelManager({
+  geraPlayer: (scene) => {
+    const pc = new Sprite({
+      x: (configMapa.colunas * configMapa.tamanho) / 2,
+      y: (configMapa.linhas * configMapa.tamanho) / 2,
+      soundPriority: Infinity,
+      color: "#3a752a",
+      speedDecline: 0.8,
+      h: 30,
+      w: 30,
+      forbiddenTiles: [9, 10],
+      onForbiddenTileEntry: () => {
+        levelManager.loseLevel();
+      },
+      restringivel: true,
+    });
 
-const pc = new Sprite({
-  x: (configMapa.colunas * configMapa.tamanho) / 2,
-  y: (configMapa.linhas * configMapa.tamanho) / 2,
-  soundPriority: Infinity,
-  color: "#3a752a",
-  speedDecline: 0.8,
-  h: 30,
-  w: 30,
+    const cannon = new Cannon({
+      x: (configMapa.colunas * configMapa.tamanho) / 2,
+      y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
+      soundPriority: Infinity,
+      color: "#2e5c21",
+      h: cannonHeight,
+      w: 5,
+      colidivel: false,
+      restringivel: false,
+      canvas: canvas,
+      tank: pc,
+    });
+
+    pc.controlar = moveTanque;
+    pc.onDeath = () => {
+      scene.removeSprite(cannon);
+      levelManager.onLoseLevel();
+    };
+
+    levelManager.player = pc;
+    scene.adicionar(pc);
+    scene.adicionar(cannon);
+  },
+  geraInimigo: (scene) => {
+    let pos = scene.mapa.geraPosicaoValidaAleatoria([9]);
+    let posStr = `${pos.line} - ${pos.col}`;
+
+    while (levelManager.posInimigosGerados.includes(posStr)) {
+      pos = scene.mapa.geraPosicaoValidaAleatoria([9]);
+      posStr = `${pos.line} - ${pos.col}`;
+    }
+    levelManager.posInimigosGerados.push(posStr);
+    scene.enemyCount += 1;
+
+    const enemy = new Sprite({
+      ...pos,
+      color: "red",
+      soundPriority: 0,
+      w: 24,
+      h: 48,
+      spriteAnim: {
+        start: { x: 0, y: 0 },
+        dim: { h: 64, w: 32 },
+        delta: { x: 32, y: 0 },
+        image: "mageSheet",
+        nStates: 5,
+        stateDelay: 200,
+      },
+      onDeath: () => {
+        scene.enemyCount -= 1;
+        if (scene.enemyCount == 0) {
+          levelManager.winLevel();
+        }
+      },
+      assetManager: assets,
+    });
+
+    enemy.addTimedEvent(1000 + 500 * Math.random(), atiraNoTanque);
+    scene.adicionar(enemy);
+  },
+  onWinLevel: () => {
+    console.log("You won :D");
+  },
+  onLoseLevel: () => {
+    console.log("You lost :(");
+  },
+  cena: cena1,
 });
-
-const cannonHeight = 30;
-const cannon = new Cannon({
-  x: (configMapa.colunas * configMapa.tamanho) / 2,
-  y: (configMapa.linhas * configMapa.tamanho - cannonHeight) / 2,
-  soundPriority: Infinity,
-  color: "#2e5c21",
-  h: cannonHeight,
-  w: 5,
-  colidivel: false,
-  restringivel: false,
-  canvas: canvas,
-  tank: pc,
-});
-
-pc.controlar = moveTanque;
-
-cena1.adicionar(pc);
-cena1.adicionar(cannon);
-
-const aceleracaoTanque = 200;
 
 function moveTanque(dt) {
   if (input.comandos.get("MOVE_ESQUERDA")) {
@@ -114,23 +175,37 @@ function moveTanque(dt) {
   }
 }
 
-function perseguePC(dt) {
-  this.vx = 25 * Math.sign(pc.x - this.x);
-  this.vy = 25 * Math.sign(pc.y - this.y);
-}
+function atiraNoTanque() {
+  const pc = levelManager.getPlayer();
+  const shotSpeed = levelManager.getShotSpeed();
+  const scene = levelManager.getCena();
 
-function geraInimigo(cena) {
-  cena.adicionar(
+  const direcao = {
+    x: pc.x - this.x,
+    y: pc.y - this.y,
+  };
+  const norma = Math.sqrt(direcao.x ** 2 + direcao.y ** 2);
+  direcao.x /= norma;
+  direcao.y /= norma;
+
+  const origemTiro = {
+    x: this.x + direcao.x * this.h,
+    y: this.y + direcao.y * this.h,
+  };
+
+  scene.adicionar(
     new Sprite({
-      ...cena.mapa.geraPosicaoValidaAleatoria(),
+      ...origemTiro,
+      vx: direcao.x * shotSpeed,
+      vy: direcao.y * shotSpeed,
+      raio: fireballRadius,
+      ehBola: true,
       color: "red",
-      controlar: perseguePC,
-      soundPriority: 0,
     })
   );
 }
 
-cena1.iniciar();
+levelManager.iniciaJogo();
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
